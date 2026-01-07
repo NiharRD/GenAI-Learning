@@ -4,17 +4,10 @@ load_dotenv()
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-## Parser  it converts LLM's response  to string , as generally LLMs return response in dict format
-##  LLM Response: "Sure! Here they are: 1. Apple, 2. Banana, 3. Cherry."
-## Output Parser will convert it to : "Sure! Here they are: 1. Apple, 2. Banana, 3. Cherry."
-
-
+from langchain_community.llms import Ollama
 import streamlit as st
 import os
-
-
 os.environ["OPENAI_API_KEY"]=os.getenv("OPENAI_API_KEY")
-## Langmith tracking
 os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
 
@@ -24,11 +17,12 @@ prompt=ChatPromptTemplate.from_messages( [
 ])
 
 ## Streamlit app
-st.title(" App with Langchain and OpenAI")
+st.title(" App with Langchain and Local LLM")
 text_input=st.text_area("Questions you want to ask:")
 
+
 ## OpneAI LLM
-llm=ChatOpenAI(model_name="gpt-3.5-turbo")
+llm=Ollama(model="gemma3:1B")
 output_parser=StrOutputParser()
 
 #Langchain inference 
@@ -36,6 +30,3 @@ chain=prompt|llm|output_parser ## works as a pipeline for prompt , LLM and outpu
 
 if text_input: 
     st.write( chain.invoke( {"questions":text_input}))
-
-
-## To run the app use : streamlit run app.py
