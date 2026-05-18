@@ -1,3 +1,5 @@
 openai
 python-dotenv
 transformers
+requests                        
+pydantic
